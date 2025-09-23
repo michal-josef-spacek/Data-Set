@@ -18,5 +18,6 @@ README
 Set.pm
 t/Data-Set/01-use.t
 t/Data-Set/02-version.t
+t/Data-Set/03-new.t
 xt/Data-Set/01-pod_coverage.t
 xt/Data-Set/02-pod.t
