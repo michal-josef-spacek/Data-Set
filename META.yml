@@ -1,5 +1,5 @@
 ---
-abstract: 'Dataset abstract class.'
+abstract: 'Data set abstract class.'
 author:
   - 'Michal Josef Spacek <skim@cpan.org>'
 build_requires:
