@@ -1,0 +1,158 @@
+NAME
+    Data::Set - Data set abstract class.
+
+SYNOPSIS
+     use Data::Set;
+
+     my $obj = Data::Set->new(%params);
+     my $data_hr = $obj->data;
+     $obj->add_object_to_output_array($key, $object);
+
+DESCRIPTION
+    Abstract class for dataset implementations with common constructor
+    checks and helpers for output structure manipulation.
+
+METHODS
+  "new"
+     my $obj = Data::Set->new(%params);
+
+    Constructor.
+
+    Returns "Data::Set" instance.
+
+    Supported parameters:
+
+    *   "lang"
+
+        Language in ISO 639-2 format. Default value is "eng".
+
+    *   "output_struct"
+
+        Hash reference with output data structure. Default value is empty
+        hash reference.
+
+    *   "texts"
+
+        Hash reference with texts. Default value is empty hash reference.
+
+  "data"
+     my $data_hr = $obj->data;
+
+    Abstract method for fetching dataset data. Return value is
+    "$self-"{'output_struct'}> structure.
+
+    Returns reference to hash.
+
+  "add_object_to_output_array"
+     $obj->add_object_to_output_array($key, $object);
+
+    Add object or objects under $key in the output structure array.
+
+    Parameter $object must be blessed instance or reference to array with
+    instances.
+
+    Returns undef.
+
+ERRORS
+     new():
+             From Class::Utils::set_params():
+                     Unknown parameter '%s'.
+             From Mo::utils::Language::check_language_639_2():
+                     Parameter 'lang' doesn't contain valid ISO 639-2 code.
+             From Mo::utils::Hash::check_hash():
+                     Parameter 'output_struct' isn't hash reference.
+                     Parameter 'texts' isn't hash reference.
+
+     data():
+             Need to be implemented.
+
+     add_object_to_output_array():
+             Bad output structure defined in constructor.
+             Bad object.
+
+EXAMPLES
+  EXAMPLE
+     use strict;
+     use warnings;
+
+     package Foo;
+
+     use parent 'Data::Set';
+
+     use Data::Const::HashType;
+
+     sub data {
+             my $self = shift;
+
+             my $hash_type = Data::Const::HashType->new->data;
+
+             # Add hash type to output structure.
+             $self->add_object_to_output_array('hash_types', $hash_type);
+
+             # Explicit value.
+             $self->{'output_struct'}->{'foo'} = 'Example';
+
+             return $self->{'output_struct'};
+     }
+
+     package main;
+
+     use Data::Printer;
+
+     # Object.
+     my $obj = Foo->new;
+
+     # Get data.
+     my $data_hr = $obj->data;
+
+     # Dump out.
+     p $data_hr;
+
+     # Output like:
+     # {
+     #     foo          "Example",
+     #     hash_types   [
+     #         [0] Data::HashType  {
+     #                 parents: Mo::Object
+     #                 public methods (6):
+     #                     BUILD
+     #                     Error::Pure:
+     #                         err
+     #                     Mo::utils:
+     #                         check_isa, check_length, check_required
+     #                     Mo::utils::Number:
+     #                         check_positive_natural
+     #                 private methods (0)
+     #                 internals: {
+     #                     id           1,
+     #                     name         "SHA-512",
+     #                     valid_from   \d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d (DateTime)
+     #                 }
+     #             }
+     #     ]
+     # }
+
+DEPENDENCIES
+    Class::Utils, Error::Pure, Mo::utils::Hash, Mo::utils::Language,
+    Scalar::Util.
+
+SEE ALSO
+    Data::Const
+        Abstract class for constant data objects.
+
+REPOSITORY
+    <https://github.com/michal-josef-spacek/Data-Set>
+
+AUTHOR
+    Michal Josef Špaček <mailto:skim@cpan.org>
+
+    <http://skim.cz>
+
+LICENSE AND COPYRIGHT
+    © 2025 Michal Josef Špaček
+
+    BSD 2-Clause License
+
+VERSION
+    0.01
+
